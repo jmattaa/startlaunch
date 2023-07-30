@@ -102,3 +102,19 @@ body {
   -ms-transition: opacity 100ms ease-in-out;
   transition: opacity 100ms ease-in-out;
 }
+
+.temp {
+    position: absolute;
+    top: 15%;
+    left: 25%;
+    font-size: 2em;
+    font-family: Helvetica, sans-serif;
+}
+
+.time {
+    position: absolute;
+    top: 15%;
+    right: 25%;
+    font-size: 2em;
+    font-family: Helvetica, sans-serif;
+}

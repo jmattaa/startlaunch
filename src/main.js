@@ -3,8 +3,7 @@ const urlParams = new URLSearchParams(queryString);
 const titleName = urlParams.get('name');
 const position = { lat: urlParams.get('lat'), lon: urlParams.get('lon') };
 
-if (!position.lat && !position.lon)
-{
+if (!position.lat && !position.lon) {
     // Null island :)
     position.lat = 0;
     position.lon = 0;
@@ -12,9 +11,27 @@ if (!position.lat && !position.lon)
 
 document.title = `${document.title} - ${titleName || "Jonathan"}`;
 
-fetch(`https://api.open-meteoo.com/v1/forecast?latitude=${position.lat}&longitude=${position.lon}&current_weather=true`)
-    .then(res => res.json())
-    .then(data => console.log(data));
+
+fetch("https://goweather.herokuapp.com/weather/Stockholm")
+    .then(res => res.json().then(data => {
+        document.getElementById("temp").innerHTML = data.temperature;
+    }));
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
+function showTime() {
+    const today = new Date();
+    let h = today.getHours();
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+    setTimeout(showTime, 1000);
+}
 
 const searchBox = document.getElementById("search");
 
@@ -25,3 +42,5 @@ searchBox.addEventListener("keydown", (e) => {
         else searchBox.value = "";
     }
 });
+
+showTime();
