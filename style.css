@@ -1,3 +1,8 @@
+:root {
+    color-scheme: var(--colorscheme);
+    --toggle-bg: transparent;
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -103,18 +108,44 @@ body {
   transition: opacity 100ms ease-in-out;
 }
 
-.temp {
-    position: absolute;
-    top: 15%;
-    left: 25%;
-    font-size: 2em;
+.big-font {
+    font-size: 5vmin;
     font-family: Helvetica, sans-serif;
 }
 
-.time {
-    position: absolute;
-    top: 15%;
-    right: 25%;
-    font-size: 2em;
+.medium-font {
+    font-size: 2.5vmin;
     font-family: Helvetica, sans-serif;
 }
+
+.widgets-container {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+.toggle-switch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3.5vmax;
+  height: 3.5vmax;
+}
+
+label {
+  position: absolute;
+  width: 100%;
+  height: inherit;
+  background-color: var(--toggle-bg);
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+input {
+  position: absolute;
+  display: none;
+}
+

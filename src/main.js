@@ -1,29 +1,54 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const titleName = urlParams.get('name');
-const position = { lat: urlParams.get('lat'), lon: urlParams.get('lon') };
+const widgets = document.getElementById("widgets-container");
 
-if (!position.lat && !position.lon) {
-    // Null island :)
-    position.lat = 0;
-    position.lon = 0;
-}
+const darkmodeToggle = document.getElementById("darkmode-toggle");
+
+let today = new Date();
+const currentDay = today.getDate();
+
+let currentVerse;
 
 document.title = `${document.title} - ${titleName || "Jonathan"}`;
 
+if (localStorage.getItem("lastFetchedVerseDate") != currentDay && !localStorage.getItem("todaysVerse")) {
+    fetch("https://beta.ourmanna.com/api/v1/get")
+        .then(data => data.text().then(verse => {
+            currentVerse = verse;
+            localStorage.setItem("lastFetchedVerseDate", currentDay);
+            localStorage.setItem("todaysVerse", verse);
+            const verseElement = document.createElement("div");
+            verseElement.classList.add("medium-font");
+            verseElement.innerText = currentVerse;
+            widgets.appendChild(verseElement);
+        }));
+} else {
+    currentVerse = localStorage.getItem("todaysVerse");
+    const verseElement = document.createElement("div");
+    verseElement.classList.add("medium-font");
+    verseElement.innerText = currentVerse;
+    widgets.appendChild(verseElement);
+}
 
-fetch("https://goweather.herokuapp.com/weather/Stockholm")
-    .then(res => res.json().then(data => {
-        document.getElementById("temp").innerHTML = data.temperature;
-    }));
+function checkTheme() {
+    if (darkmodeToggle.checked) {
+        document.documentElement.style.setProperty("--colorscheme", "dark");
+        document.documentElement.style.setProperty("--toggle-bg", "#fafafa");
+    } else {
+        document.documentElement.style.setProperty("--colorscheme", "light");
+        document.documentElement.style.setProperty("--toggle-bg", "#131313");
+    }
+    localStorage.setItem("darkmode", darkmodeToggle.checked ? "dark" : "light");
+}
 
 function checkTime(i) {
-  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-  return i;
+    if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+    return i;
 }
 
 function showTime() {
-    const today = new Date();
+    today = new Date();
     let h = today.getHours();
     let m = today.getMinutes();
     let s = today.getSeconds();
@@ -33,14 +58,14 @@ function showTime() {
     setTimeout(showTime, 1000);
 }
 
-const searchBox = document.getElementById("search");
+showTime();
 
-searchBox.addEventListener("keydown", (e) => {
-    if (e.code == "Enter") {
-        const { value } = searchBox;
-        if (value.replace(/ /gm, "").length > 0) location.href = `https://duckduckgo.com/?q=${value}`;
-        else searchBox.value = "";
-    }
+if (localStorage.getItem("darkmode") === "dark")
+    darkmodeToggle.checked = true;
+else
+    darkmodeToggle.checked = false;
+checkTheme();
+darkmodeToggle.addEventListener("change", () => {
+    checkTheme();
 });
 
-showTime();
